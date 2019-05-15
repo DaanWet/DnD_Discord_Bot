@@ -19,16 +19,6 @@ public class CommandListener extends ListenerAdapter {
             "d100", new D100()
     );
 
-    private Map<String, String> images = Map.of(
-            "d4", "https://www.dnddice.com/media/wysiwyg/d4.jpg",
-            "d6", "https://www.dnddice.com/media/wysiwyg/d6.jpg",
-            "d8", "https://www.dnddice.com/media/wysiwyg/d8.jpg",
-            "d10", "https://www.dnddice.com/media/wysiwyg/d10.jpg",
-            "d12", "https://www.dnddice.com/media/wysiwyg/d12.jpg",
-            "d20", "https://www.dnddice.com/media/wysiwyg/d20.jpg",
-            "d100", "https://www.dnddice.com/media/wysiwyg/d10_.jpg"
-    );
-
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent e){
         String message = e.getMessage().getContentRaw();
@@ -38,7 +28,8 @@ public class CommandListener extends ListenerAdapter {
             if (dices.keySet().contains(command.toLowerCase())){
                 EmbedBuilder eb = new EmbedBuilder();
                 Dice dice = dices.get(command.toLowerCase());
-                eb.addField(e.getMember().getNickname() + " rolled a " + command.toLowerCase() + " and got: ",  Integer.toString(dice.roll()), true);
+                String name = (e.getMember().getNickname() != null)? e.getMember().getNickname() : e.getMember().getEffectiveName();
+                eb.addField(name + " rolled a " + command.toLowerCase() + " and got: ",  Integer.toString(dice.roll()), true);
                 eb.setThumbnail(dice.getImage());
                 e.getChannel().sendMessage(eb.build()).queue();
             } else if (command.equalsIgnoreCase("commands") && words.length == 1){
