@@ -12,7 +12,7 @@ public class CommandListener extends ListenerAdapter {
 
     private Map<String, ArgsListener> commandMap = Map.of(
             "commands", new CommandLister(),
-            "d", new DiceRoller()
+            "r", new DiceRoller()
 
     );
 
