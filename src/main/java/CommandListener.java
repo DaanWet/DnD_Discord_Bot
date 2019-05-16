@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import javax.annotation.processing.SupportedSourceVersion;
 import java.lang.reflect.Array;
 import java.util.Map;
+import java.util.function.Function;
 
 public class CommandListener extends ListenerAdapter {
 
@@ -25,11 +26,23 @@ public class CommandListener extends ListenerAdapter {
         String[] words = message.split(" ");
         if (message.length() > 0 && words[0].substring(0,1).equals("!")){
             String command = words[0].substring(1);
-            if (dices.keySet().contains(command.toLowerCase())){
+            if (dices.keySet().contains(command.toLowerCase()) && words.length <= 2){
                 EmbedBuilder eb = new EmbedBuilder();
                 Dice dice = dices.get(command.toLowerCase());
                 String name = (e.getMember().getNickname() != null)? e.getMember().getNickname() : e.getMember().getEffectiveName();
-                eb.addField(name + " rolled a " + command.toLowerCase() + " and got: ",  Integer.toString(dice.roll()), true);
+                if (words.length == 1) {
+                    eb.addField(name + " rolled a " + command.toLowerCase() + " and got: ", Integer.toString(dice.roll()), true);
+                } else {
+                    if (words[1].equalsIgnoreCase("adv")) {
+                        int first = dice.roll();
+                        int second = dice.roll();
+                        eb.addField(name + " rollad a " + command.toLowerCase() + " with advantage and got", first + " & " + second + " => " + Math.max(first, second), true);
+                    } else if (words[0].equalsIgnoreCase("dis")) {
+                        int first = dice.roll();
+                        int second = dice.roll();
+                        eb.addField(name + " rollad a " + command.toLowerCase() + " with advantage and got", first + " & " + second + " => " + Math.min(first, second), true);
+                    }
+                }
                 eb.setThumbnail(dice.getImage());
                 e.getChannel().sendMessage(eb.build()).queue();
             } else if (command.equalsIgnoreCase("commands") && words.length == 1){

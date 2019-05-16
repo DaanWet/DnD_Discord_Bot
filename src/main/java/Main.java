@@ -9,7 +9,7 @@ public class Main {
     public static void main(String args[]) throws Exception {
 
         JDA jda = new JDABuilder(ResourceBundle.getBundle("Dnd").getString("Token")).build();
-
+        jda.setAutoReconnect(true);
         jda.addEventListener(new CommandListener());
         //https://discordapp.com/oauth2/authorize?client_id=577940186755891211&permissions=134736960&scope=bot
     }
