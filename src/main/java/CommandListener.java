@@ -24,7 +24,7 @@ public class CommandListener extends ListenerAdapter {
     public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
         String message = e.getMessage().getContentRaw();
         String[] words = message.split(" ");
-        if (message.length() > 0 && words[0].substring(0, 1).equals("!")) {
+        if (message.length() > 0 && words[0].substring(0, 1).equals("/")) {
             String command = words[0].substring(1);
             if (dices.keySet().contains(command.toLowerCase()) && words.length <= 2) {
                 EmbedBuilder eb = new EmbedBuilder();
@@ -42,26 +42,32 @@ public class CommandListener extends ListenerAdapter {
                         int second = dice.roll();
                         eb.addField(name + " rolled a " + command.toLowerCase() + " with disadvantage and got:", first + " & " + second + " => " + Math.min(first, second), true);
                     } else if (isInteger(words[1])) {
-                        int som = 0;
                         int aantal = Integer.parseInt(words[1]);
-                        StringBuilder result = new StringBuilder();
-                        int roll = dice.roll();
-                        result.append(roll);
-                        som += roll;
-                        for (int i = 1; i < aantal; i++) {
-                            result.append(" + ");
-                            roll = dice.roll();
+                        if (aantal <= 50) {
+                            int som = 0;
+                            StringBuilder result = new StringBuilder();
+                            int roll = dice.roll();
                             result.append(roll);
                             som += roll;
+                            for (int i = 1; i < aantal; i++) {
+                                result.append(" + ");
+                                roll = dice.roll();
+                                result.append(roll);
+                                som += roll;
+                            }
+                            result.append(" = ");
+                            result.append(som);
+                            eb.addField(name + " rolled " + aantal + " times a " + command.toLowerCase() + " and got:", result.toString(), true);
+                        } else {
+                            eb.setTitle("We currently do not support more than 50 rolls in one command");
+                            e.getChannel().sendMessage(eb.build()).queue();
+                            return;
                         }
-                        result.append(" = ");
-                        result.append(som);
-                        eb.addField(name + " rolled " + aantal + " times a " + command.toLowerCase() + " and got:", result.toString(), true);
                     }
                 }
                 eb.setThumbnail(dice.getImage());
                 e.getChannel().sendMessage(eb.build()).queue();
-            } else if (command.equalsIgnoreCase("commands") && words.length == 1) {
+            } else if (words.length == 1 && (command.equalsIgnoreCase("commands") || command.equalsIgnoreCase("help") || command.equalsIgnoreCase("h"))) {
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setTitle("Sumarville Commands");
                 StringBuilder dicerolls = new StringBuilder();
