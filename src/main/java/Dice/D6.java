@@ -4,7 +4,7 @@ public class D6 extends Dice{
 
     public D6(){
         super();
-        image = "https://www.dnddice.com/media/wysiwyg/d8.jpg";
+        image = "https://www.dnddice.com/media/wysiwyg/d6.jpg";
     }
 
     @Override

@@ -36,11 +36,24 @@ public class CommandListener extends ListenerAdapter {
                     if (words[1].equalsIgnoreCase("adv")) {
                         int first = dice.roll();
                         int second = dice.roll();
-                        eb.addField(name + " rollad a " + command.toLowerCase() + " with advantage and got", first + " & " + second + " => " + Math.max(first, second), true);
-                    } else if (words[0].equalsIgnoreCase("dis")) {
+                        eb.addField(name + " rolled a " + command.toLowerCase() + " with advantage and got:", first + " & " + second + " => " + Math.max(first, second), true);
+                    } else if (words[1].equalsIgnoreCase("dis")) {
                         int first = dice.roll();
                         int second = dice.roll();
-                        eb.addField(name + " rollad a " + command.toLowerCase() + " with advantage and got", first + " & " + second + " => " + Math.min(first, second), true);
+                        eb.addField(name + " rolled a " + command.toLowerCase() + " with disadvantage and got:", first + " & " + second + " => " + Math.min(first, second), true);
+                    } else if (isInteger(words[1])){
+                        int som = 0;
+                        int aantal = Integer.parseInt(words[1]);
+                        StringBuilder result = new StringBuilder(dice.roll());
+                        for (int i = 1; i < aantal; i++){
+                            result.append( " + ");
+                            int roll = dice.roll();
+                            result.append(roll);
+                            som += roll;
+                        }
+                        result.append(" = ");
+                        result.append(som);
+                        eb.addField(name + " rolled " + aantal + " times a " + command.toLowerCase() + " and got:", result.toString(), true);
                     }
                 }
                 eb.setThumbnail(dice.getImage());
@@ -58,5 +71,14 @@ public class CommandListener extends ListenerAdapter {
                 e.getChannel().sendMessage(eb.build()).queue();
             }
         }
+    }
+
+    public boolean isInteger(String s){
+        try{
+            Integer.parseInt(s);
+        }catch (Exception e){
+            return false;
+        }
+        return true;
     }
 }
