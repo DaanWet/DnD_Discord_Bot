@@ -44,10 +44,13 @@ public class CommandListener extends ListenerAdapter {
                     } else if (isInteger(words[1])){
                         int som = 0;
                         int aantal = Integer.parseInt(words[1]);
-                        StringBuilder result = new StringBuilder(dice.roll());
+                        StringBuilder result = new StringBuilder();
+                        int roll = dice.roll();
+                        result.append(roll);
+                        som += roll;
                         for (int i = 1; i < aantal; i++){
                             result.append( " + ");
-                            int roll = dice.roll();
+                            roll = dice.roll();
                             result.append(roll);
                             som += roll;
                         }
