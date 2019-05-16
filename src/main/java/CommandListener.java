@@ -21,15 +21,15 @@ public class CommandListener extends ListenerAdapter {
     );
 
     @Override
-    public void onGuildMessageReceived(GuildMessageReceivedEvent e){
+    public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
         String message = e.getMessage().getContentRaw();
         String[] words = message.split(" ");
-        if (message.length() > 0 && words[0].substring(0,1).equals("!")){
+        if (message.length() > 0 && words[0].substring(0, 1).equals("!")) {
             String command = words[0].substring(1);
-            if (dices.keySet().contains(command.toLowerCase()) && words.length <= 2){
+            if (dices.keySet().contains(command.toLowerCase()) && words.length <= 2) {
                 EmbedBuilder eb = new EmbedBuilder();
                 Dice dice = dices.get(command.toLowerCase());
-                String name = (e.getMember().getNickname() != null)? e.getMember().getNickname() : e.getMember().getEffectiveName();
+                String name = (e.getMember().getNickname() != null) ? e.getMember().getNickname() : e.getMember().getEffectiveName();
                 if (words.length == 1) {
                     eb.addField(name + " rolled a " + command.toLowerCase() + " and got: ", Integer.toString(dice.roll()), true);
                 } else {
@@ -41,15 +41,15 @@ public class CommandListener extends ListenerAdapter {
                         int first = dice.roll();
                         int second = dice.roll();
                         eb.addField(name + " rolled a " + command.toLowerCase() + " with disadvantage and got:", first + " & " + second + " => " + Math.min(first, second), true);
-                    } else if (isInteger(words[1])){
+                    } else if (isInteger(words[1])) {
                         int som = 0;
                         int aantal = Integer.parseInt(words[1]);
                         StringBuilder result = new StringBuilder();
                         int roll = dice.roll();
                         result.append(roll);
                         som += roll;
-                        for (int i = 1; i < aantal; i++){
-                            result.append( " + ");
+                        for (int i = 1; i < aantal; i++) {
+                            result.append(" + ");
                             roll = dice.roll();
                             result.append(roll);
                             som += roll;
@@ -61,11 +61,11 @@ public class CommandListener extends ListenerAdapter {
                 }
                 eb.setThumbnail(dice.getImage());
                 e.getChannel().sendMessage(eb.build()).queue();
-            } else if (command.equalsIgnoreCase("commands") && words.length == 1){
+            } else if (command.equalsIgnoreCase("commands") && words.length == 1) {
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setTitle("Sumarville Commands");
                 StringBuilder dicerolls = new StringBuilder();
-                for (String dice : dices.keySet()){
+                for (String dice : dices.keySet()) {
                     dicerolls.append(", !");
                     dicerolls.append(dice);
                 }
@@ -76,10 +76,10 @@ public class CommandListener extends ListenerAdapter {
         }
     }
 
-    public boolean isInteger(String s){
-        try{
+    public boolean isInteger(String s) {
+        try {
             Integer.parseInt(s);
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
         return true;
