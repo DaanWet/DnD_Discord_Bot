@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import javax.annotation.processing.SupportedSourceVersion;
+import java.awt.*;
 import java.lang.reflect.Array;
 import java.util.Map;
 import java.util.function.Function;
@@ -11,13 +12,13 @@ import java.util.function.Function;
 public class CommandListener extends ListenerAdapter {
 
     private Map<String, Dice> dices = Map.of(
-            "d4", new D4(),
-            "d6", new D6(),
-            "d8", new D8(),
-            "d10", new D10(),
-            "d12", new D12(),
-            "d20", new D20(),
-            "d100", new D100()
+            "d4", new Dice(4),
+            "d6", new Dice(6),
+            "d8", new Dice(8),
+            "d10", new Dice(10),
+            "d12", new Dice(12),
+            "d20", new Dice(20),
+            "d100", new Dice(100)
     );
 
     @Override
@@ -65,6 +66,7 @@ public class CommandListener extends ListenerAdapter {
                         }
                     }
                 }
+                eb.setColor(Color.ORANGE);
                 eb.setThumbnail(dice.getImage());
                 e.getChannel().sendMessage(eb.build()).queue();
             } else if (words.length == 1 && (command.equalsIgnoreCase("commands") || command.equalsIgnoreCase("help") || command.equalsIgnoreCase("h"))) {
@@ -72,7 +74,7 @@ public class CommandListener extends ListenerAdapter {
                 eb.setTitle("Sumarville Commands");
                 StringBuilder dicerolls = new StringBuilder();
                 for (String dice : dices.keySet()) {
-                    dicerolls.append(", !");
+                    dicerolls.append(", /");
                     dicerolls.append(dice);
                 }
                 dicerolls.delete(0, 1);
