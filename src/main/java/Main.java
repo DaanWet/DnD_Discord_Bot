@@ -3,8 +3,6 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
-
-import javax.security.auth.login.LoginException;
 import java.util.List;
 import java.util.ResourceBundle;
 
