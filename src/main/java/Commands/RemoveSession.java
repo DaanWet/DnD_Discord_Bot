@@ -28,7 +28,16 @@ public class RemoveSession implements Command {
                     e.getChannel().sendMessage("There is no session on " + args[0]).queue();
                 }
             } catch (ParseException exc) {
-                exc.printStackTrace();
+                try{
+                    int count = Integer.parseInt(args[0]);
+                    ArrayList<Date> dates = calendarHandler.getSessions();
+                    if (count > 0 && count <= dates.size()){
+                        String removed = calendarHandler.removeSession(count - 1);
+                        e.getChannel().sendMessage("Succesfully removed the session on " + removed).queue();
+                    }
+                } catch (Exception excc){
+                    excc.printStackTrace();
+                }
             }
         } else {
             e.getChannel().sendMessage("Usage: /removesession [dd/MM/yyyy]").queue();

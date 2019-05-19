@@ -35,19 +35,19 @@ public class Dice implements Command{
     public void run(String[] args, GuildMessageReceivedEvent e) {
         EmbedBuilder eb = new EmbedBuilder();
         String name = (e.getMember().getNickname() != null) ? e.getMember().getNickname() : e.getMember().getEffectiveName();
-        if (args.length == 1) {
+        if (args.length == 0) {
             eb.addField(name + " rolled a " + getName() + " and got: ", Integer.toString(roll()), true);
-        } else {
-            if (args[1].equalsIgnoreCase("adv")) {
+        } else if (args.length == 1){
+            if (args[0].equalsIgnoreCase("adv")) {
                 int first = roll();
                 int second = roll();
                 eb.addField(name + " rolled a " + getName() + " with advantage and got:", first + " & " + second + " => " + Math.max(first, second), true);
-            } else if (args[1].equalsIgnoreCase("dis")) {
+            } else if (args[0].equalsIgnoreCase("dis")) {
                 int first = roll();
                 int second = roll();
                 eb.addField(name + " rolled a " + getName() + " with disadvantage and got:", first + " & " + second + " => " + Math.min(first, second), true);
-            } else if (isInteger(args[1])) {
-                int aantal = Integer.parseInt(args[1]);
+            } else if (isInteger(args[0])) {
+                int aantal = Integer.parseInt(args[0]);
                 if (aantal <= 50) {
                     int som = 0;
                     StringBuilder result = new StringBuilder();
@@ -69,6 +69,9 @@ public class Dice implements Command{
                     return;
                 }
             }
+        } else {
+            e.getChannel().sendMessage("Usage: /" + getName() + " [ adv | dis | <number>]").queue();
+            return;
         }
         eb.setColor(Color.ORANGE);
         eb.setThumbnail(image);

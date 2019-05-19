@@ -1,7 +1,9 @@
 import Commands.*;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+
 
 import java.awt.*;
 import java.util.Arrays;
@@ -25,6 +27,7 @@ public class CommandListener extends ListenerAdapter {
             "addsession", new AddSession(),
             "removesession", new RemoveSession()
     );
+
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
