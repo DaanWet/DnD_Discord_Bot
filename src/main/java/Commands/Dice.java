@@ -6,7 +6,7 @@ import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import java.awt.*;
 import java.util.Random;
 
-public class Dice implements Command{
+public class Dice extends Command{
 
     private static Random random;
     private String image;
@@ -15,6 +15,7 @@ public class Dice implements Command{
     public Dice(int max){
         random = new Random();
         this.max = max;
+        this.name = String.format("d%d", max);
         this.image = String.format("https://www.dnddice.com/media/wysiwyg/d%s.jpg", (max != 100) ? max : "10_");
     }
 
@@ -25,10 +26,6 @@ public class Dice implements Command{
     @Override
     public String getDescription(){
         return String.format("Rolls a d%d", max);
-    }
-
-    public String getName(){
-        return String.format("d%d", max);
     }
 
     @Override

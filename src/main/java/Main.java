@@ -14,6 +14,9 @@ public class Main {
     public static void main(String args[]) throws Exception {
         JDA jda = new JDABuilder(ResourceBundle.getBundle("Dnd").getString("Token")).build();
         List<Guild> guilds = jda.getGuilds();
+        for (Guild g : guilds){
+
+        }
         jda.getPresence().setPresence(OnlineStatus.ONLINE, Game.of(Game.GameType.LISTENING, "/commands"));
         jda.setAutoReconnect(true);
         jda.addEventListener(new CommandListener());

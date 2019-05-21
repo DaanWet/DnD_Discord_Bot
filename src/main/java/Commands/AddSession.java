@@ -7,12 +7,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class AddSession implements Command {
+public class AddSession extends Command {
 
     private SimpleDateFormat storesdf;
 
+
     public AddSession(){
         storesdf = new SimpleDateFormat("dd/MM/yyyy");
+        this.name = "addsession";
+        this.aliases = new String[]{"as"};
+        this.category = "Calendar";
     }
 
 
@@ -22,7 +26,7 @@ public class AddSession implements Command {
             CalendarHandler calendarHandler = new CalendarHandler();
             try{
                 Date date = storesdf.parse(args[0]);
-                ArrayList<Date> dates = calendarHandler.getSessions();
+                ArrayList<Date> dates = calendarHandler.getSessions(false);
                 Date today = new Date();
                 if (date.after(new Date(today.getTime() - (1000 * 60 * 60 * 24)))) {
                     if (!dates.contains(date)) {

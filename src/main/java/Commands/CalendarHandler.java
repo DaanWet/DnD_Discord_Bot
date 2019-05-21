@@ -15,6 +15,7 @@ import java.util.Date;
 public class CalendarHandler {
 
     private SimpleDateFormat storesdf;
+    private JSONObject jsonObject;
 
     public CalendarHandler() {
         JSONParser parser = new JSONParser();
@@ -27,7 +28,7 @@ public class CalendarHandler {
 
     }
 
-    private JSONObject jsonObject;
+
 
     public void addSession(Date date) {
         JSONArray jsonArray = ((JSONArray) jsonObject.get("Dates"));
@@ -41,27 +42,21 @@ public class CalendarHandler {
         save();
     }
 
-    public String removeSession(int i) {
-        JSONArray jsonArray = ((JSONArray) jsonObject.get("Dates"));
-        String s = (String) jsonArray.get(i);
-        jsonArray.remove(i);
-        save();
-        return s;
-    }
-
-    public ArrayList<Date> getSessions() {
-        JSONArray jsonArray = ((JSONArray) jsonObject.get("Dates"));
+    public ArrayList<Date> getSessions(boolean allsessions) {
+        JSONArray jsonArray = (JSONArray) jsonObject.get("Dates");
         ArrayList<Date> dates = new ArrayList<>();
         for (Object date : jsonArray.toArray()) {
             try {
                 String d = (String) date;
-                System.out.println(d);
-                dates.add(storesdf.parse(d));
+                Date da = storesdf.parse(d);
+                Date today = new Date();
+                if (allsessions || da.after(new Date(today.getTime() - (1000 * 60 * 60 * 24)))) {
+                    dates.add(da);
+                }
             } catch (java.text.ParseException exc) {
                 exc.printStackTrace();
             }
         }
-        System.out.println(dates);
         Collections.sort(dates);
         return dates;
     }
