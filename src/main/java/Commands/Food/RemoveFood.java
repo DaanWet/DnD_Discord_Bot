@@ -22,21 +22,27 @@ public class RemoveFood extends Command {
                 int i = Integer.parseInt(args[0]) - 1;
                 ArrayList<Map<String, String>> food = foodHandler.getFood();
                 if (i > 0 && i < food.size()) {
+                    String emoji = food.get(i).get("Emoji");
                     String name = food.get(i).get("Name");
                     foodHandler.removeFood(i);
+                    e.getChannel().sendMessage("Succesully removed " + name + " with " + emoji + " as emoji").queue();
                 } else {
                     e.getChannel().sendMessage("The lunch-list only containts " + food.size() + " items").queue();
                 }
             } else {
                 int index = foodHandler.checkFood(args[0]);
                 if (index != -1) {
+                    ArrayList<Map<String, String>> food = foodHandler.getFood();
+                    String emoji = food.get(index).get("Emoji");
+                    String name = food.get(index).get("Name");
                     foodHandler.removeFood(index);
+                    e.getChannel().sendMessage("Succesully removed " + name + " with " + emoji + " as emoji").queue();
                 } else {
-                    e.getChannel().sendMessage(args[0] + " is not on the lunch-list").queue();
+                    e.getChannel().sendMessage(args[0] + " is not an emoji on the lunch-list").queue();
                 }
             }
         } else {
-            e.getChannel().sendMessage("Usage: /removefood <food>").queue();
+            e.getChannel().sendMessage("Usage: /removefood <emoji>").queue();
         }
     }
 

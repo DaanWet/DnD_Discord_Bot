@@ -1,5 +1,6 @@
 package Commands;
 
+import Commands.Food.LunchMessager;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 import java.text.ParseException;
@@ -32,6 +33,7 @@ public class AddSession extends Command {
                     if (!dates.contains(date)) {
                         calendarHandler.addSession(date);
                         e.getChannel().sendMessage("Succesfully added a session on " + args[0]).queue();
+                        LunchMessager.makeMessage(date, e.getGuild());
                     } else {
                         e.getChannel().sendMessage("There already is a session planned on " + args[0]).queue();
                     }

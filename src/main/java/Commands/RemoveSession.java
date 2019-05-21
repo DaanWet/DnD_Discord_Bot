@@ -1,5 +1,6 @@
 package Commands;
 
+import Commands.Food.LunchMessager;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 import java.text.ParseException;
@@ -28,6 +29,7 @@ public class RemoveSession extends Command {
                     if (dates.contains(date)) {
                         calendarHandler.removeSession(date);
                         e.getChannel().sendMessage("Succesfully removed the session on " + args[0]).queue();
+                        LunchMessager.cancelMessage(date);
                     } else {
                         e.getChannel().sendMessage("There is no session on " + args[0]).queue();
                     }
@@ -39,6 +41,7 @@ public class RemoveSession extends Command {
                             Date removed = dates.get(count - 1);
                             calendarHandler.removeSession(removed);
                             e.getChannel().sendMessage("Succesfully removed the session on " + storesdf.format(removed)).queue();
+                            LunchMessager.cancelMessage(removed);
                         }
                     } catch (Exception excc) {
                         e.getChannel().sendMessage("Usage: /removesession [dd/MM/yyyy]").queue();

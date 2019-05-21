@@ -29,7 +29,7 @@ public class GetFood extends Command {
             sb.delete(0, 1);
             eb.addField("Food", sb.toString(), true);
             //e.getChannel().sendMessage(eb.build()).queue();
-            LunchMessager.makeMessage(new Date(), e.getGuild());
+            LunchMessager.makeMessage(null, e.getGuild());
         }
     }
 

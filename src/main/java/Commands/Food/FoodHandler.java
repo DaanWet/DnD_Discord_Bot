@@ -55,12 +55,12 @@ public class FoodHandler {
         return food;
     }
 
-    public int checkFood(String s){
+    public int checkFood(String emoji){
         ArrayList<Map<String, String>> foods = getFood();
         boolean exists = false;
         int i = 0;
         while (!exists && i < foods.size()){
-            if (foods.get(i).get("Name").equalsIgnoreCase(s)){
+            if (foods.get(i).get("Emoji").equalsIgnoreCase(emoji)){
                 exists = true;
             }
             i++;
