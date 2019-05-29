@@ -20,7 +20,10 @@ public class Main {
         jda.getPresence().setPresence(OnlineStatus.ONLINE, Game.of(Game.GameType.LISTENING, "/commands"));
         jda.setAutoReconnect(true);
         jda.addEventListener(new CommandListener());
-        LunchMessager.onRestart(jda.getGuilds().get(0));
+        jda.awaitReady();
+        for (Guild g : jda.getGuilds()) {
+            LunchMessager.onRestart(g);
+        }
         //https://discordapp.com/oauth2/authorize?client_id=577940186755891211&permissions=134736960&scope=bot
     }
 }
