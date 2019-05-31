@@ -37,20 +37,20 @@ public class CalendarHandler extends DataHandler{
     }
 
     public ArrayList<Date> getSessions(boolean allsessions) {
-        ArrayList<Date> dates = new ArrayList<>();
+        ArrayList<Date> datesList = new ArrayList<>();
         for (Object date : dates.toArray()) {
             try {
                 String d = (String) date;
                 Date da = storesdf.parse(d);
                 Date today = new Date();
                 if (allsessions || da.after(new Date(today.getTime() - (1000 * 60 * 60 * 24)))) {
-                    dates.add(da);
+                    datesList.add(da);
                 }
             } catch (java.text.ParseException exc) {
                 exc.printStackTrace();
             }
         }
-        Collections.sort(dates);
-        return dates;
+        Collections.sort(datesList);
+        return datesList;
     }
 }

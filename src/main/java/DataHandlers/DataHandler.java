@@ -16,6 +16,7 @@ public class DataHandler {
 
     protected JSONObject jsonObject;
     protected String guild;
+
     @SuppressWarnings("unchecked")
     public DataHandler(Guild g) {
         JSONParser parser = new JSONParser();

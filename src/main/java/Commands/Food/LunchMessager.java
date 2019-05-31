@@ -17,18 +17,18 @@ public class LunchMessager {
 
     public static void makeMessage(Date date, Guild g){
         Date today = new Date();
-        Date messagedate = new Date((date == null) ? 0 : today.getTime() + 1000 * 60);//date.getTime() - 1000 * 60 * 60 * 6);
+        Date messagedate = new Date((date == null) ? 0 : date.getTime() - 1000 * 60 * 60 * 6);
         long diff = messagedate.getTime() - today.getTime();
+        TextChannel ch;
+        if (g.getTextChannelsByName("bot-test", true).size() > 0) {
+            ch = g.getTextChannelsByName("bot-test", true).get(0);
+        } else {
+            ch = g.getDefaultChannel();
+        }
         if (date == null | diff <= 0) {
-            TextChannel ch;
-            if (g.getTextChannelsByName("bot-test", true).size() > 0) {
-                ch = g.getTextChannelsByName("bot-test", true).get(0);
-            } else {
-                ch = g.getDefaultChannel();
-            }
             ch.sendMessage(getFood(date, g)).queue(message -> getEmojis(g).forEach(s -> message.addReaction(s).queue()));
         } else {
-            ScheduledFuture<?> task =  g.getTextChannelsByName("bot-test", true).get(0).sendMessage(getFood(date, g)).queueAfter(diff, TimeUnit.MILLISECONDS, message -> getEmojis(g).forEach(s -> message.addReaction(s).queue()));
+            ScheduledFuture<?> task =  ch.sendMessage(getFood(date, g)).queueAfter(diff, TimeUnit.MILLISECONDS, message -> getEmojis(g).forEach(s -> message.addReaction(s).queue()));
             map.put(date, task);
         }
     }
