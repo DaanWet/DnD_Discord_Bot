@@ -1,7 +1,6 @@
 import Commands.*;
-import Commands.Food.AddFood;
-import Commands.Food.GetFood;
-import Commands.Food.RemoveFood;
+import Commands.Calendar.*;
+import Commands.Food.*;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -27,6 +26,7 @@ public class CommandListener extends ListenerAdapter {
     );
 
     private ArrayList<Command> commands = new ArrayList<>(Arrays.asList(new Calendar(), new AddSession(), new RemoveSession(), new AddFood(),new GetFood(), new RemoveFood()));
+    private ArrayList<Command> testcommands = new ArrayList<>(Arrays.asList(new DungeonMaster()));
 
 
     @Override
@@ -47,12 +47,17 @@ public class CommandListener extends ListenerAdapter {
                     if (!sbs.containsKey(cat)) {
                         sbs.put(cat, new StringBuilder());
                     }
-                    sbs.get(cat).append("\n/").append(c.getName()).append(": ").append(c.getDescription());
+                    StringBuilder sb = sbs.get(cat);
+                    sb.append("\n/").append(c.getName()).append("[");
+                    for (String alias : c.getAliases()){
+                        sb.append(alias).append(", ");
+                    }
+                    sb.delete(sb.length() - 2, sb.length()).append("]");
+                    sb.append(": ").append(c.getDescription());
                 }
                 eb.addField("Dice rolls", "/d4, /d6, /d8, /d10, /d12, /d20, /d100", true);
                 for (String s : sbs.keySet()){
-                    sbs.get(s).delete(0, 1);
-                    eb.addField(s, sbs.get(s).toString(), false);
+                    eb.addField(s, sbs.get(s).toString().trim(), false);
                 }
                 eb.setColor(Color.ORANGE);
                 e.getChannel().sendMessage(eb.build()).queue();
@@ -61,6 +66,11 @@ public class CommandListener extends ListenerAdapter {
                     if (c.isCommandFor(command)){
                         c.run(Arrays.copyOfRange(words, 1 , words.length), e);
                         return;
+                    }
+                }
+                for (Command c : testcommands){
+                    if (c.isCommandFor(command)){
+                        c.run(Arrays.copyOfRange(words, 1, words.length), e);
                     }
                 }
             }

@@ -1,8 +1,8 @@
 package Commands.Food;
 
-import Commands.CalendarHandler;
+import DataHandlers.CalendarHandler;
+import DataHandlers.FoodHandler;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
 import java.text.SimpleDateFormat;
@@ -19,11 +19,16 @@ public class LunchMessager {
         Date today = new Date();
         Date messagedate = new Date((date == null) ? 0 : today.getTime() + 1000 * 60);//date.getTime() - 1000 * 60 * 60 * 6);
         long diff = messagedate.getTime() - today.getTime();
-        System.out.println(diff);
         if (date == null | diff <= 0) {
-            g.getTextChannelsByName("bot-test", true).get(0).sendMessage(getFood(date)).queue(message -> getEmojis().forEach(s -> message.addReaction(s).queue()));
+            TextChannel ch;
+            if (g.getTextChannelsByName("bot-test", true).size() > 0) {
+                ch = g.getTextChannelsByName("bot-test", true).get(0);
+            } else {
+                ch = g.getDefaultChannel();
+            }
+            ch.sendMessage(getFood(date, g)).queue(message -> getEmojis(g).forEach(s -> message.addReaction(s).queue()));
         } else {
-            ScheduledFuture<?> task =  g.getTextChannelsByName("bot-test", true).get(0).sendMessage(getFood(date)).queueAfter(diff, TimeUnit.MILLISECONDS, message -> getEmojis().forEach(s -> message.addReaction(s).queue()));
+            ScheduledFuture<?> task =  g.getTextChannelsByName("bot-test", true).get(0).sendMessage(getFood(date, g)).queueAfter(diff, TimeUnit.MILLISECONDS, message -> getEmojis(g).forEach(s -> message.addReaction(s).queue()));
             map.put(date, task);
         }
     }
@@ -38,7 +43,7 @@ public class LunchMessager {
     public static void onRestart(Guild g){
         List<TextChannel> t = g.getTextChannelsByName("bot-test", true);
         if (t.size() > 0){
-            CalendarHandler calendarHandler = new CalendarHandler();
+            CalendarHandler calendarHandler = new CalendarHandler(g);
             ArrayList<Date> sessions = calendarHandler.getSessions(false);
             for (Date session : sessions){
                 Date messagedate = new Date(session.getTime() - 1000 * 60 * 60 * 6);
@@ -49,8 +54,8 @@ public class LunchMessager {
         }
     }
 
-    public static String getFood(Date date){
-        FoodHandler f = new FoodHandler();
+    public static String getFood(Date date, Guild g){
+        FoodHandler f = new FoodHandler(g);
         ArrayList<Map<String, String>> foods = f.getFood();
         StringBuilder sb = new StringBuilder();
         sb.append("Wat eten we ?").append(date != null ?  " Session: " + sdf.format(date) : "");
@@ -60,8 +65,8 @@ public class LunchMessager {
         return sb.toString();
     }
 
-    public static ArrayList<String> getEmojis(){
-        FoodHandler f = new FoodHandler();
+    public static ArrayList<String> getEmojis(Guild g){
+        FoodHandler f = new FoodHandler(g);
         ArrayList<String> emoji = new ArrayList<>();
         ArrayList<Map<String, String>> foods = f.getFood();
         foods.forEach(s -> emoji.add(s.get("Emoji")));

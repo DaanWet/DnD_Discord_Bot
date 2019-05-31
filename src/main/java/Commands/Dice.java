@@ -31,7 +31,7 @@ public class Dice extends Command{
     @Override
     public void run(String[] args, GuildMessageReceivedEvent e) {
         EmbedBuilder eb = new EmbedBuilder();
-        String name = (e.getMember().getNickname() != null) ? e.getMember().getNickname() : e.getMember().getEffectiveName();
+        String name = e.getMember().getEffectiveName();
         if (args.length == 0) {
             eb.addField(name + " rolled a " + getName() + " and got: ", Integer.toString(roll()), true);
         } else if (args.length == 1){
@@ -73,14 +73,6 @@ public class Dice extends Command{
         eb.setColor(Color.ORANGE);
         eb.setThumbnail(image);
         e.getChannel().sendMessage(eb.build()).queue();
-    }
-    public boolean isInteger(String s) {
-        try {
-            Integer.parseInt(s);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
     }
 
 }

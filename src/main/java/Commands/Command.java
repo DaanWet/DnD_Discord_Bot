@@ -18,6 +18,10 @@ public abstract class Command {
         return name;
     }
 
+    public String[] getAliases(){
+        return aliases;
+    }
+
     public String getCategory(){
         return category;
     }
@@ -32,5 +36,18 @@ public abstract class Command {
             }
         }
         return false;
+    }
+
+    public boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch (Exception e) {
+            try {
+                Long.parseLong(s);
+            } catch (Exception exc){
+                return false;
+            }
+        }
+        return true;
     }
 }

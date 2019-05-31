@@ -1,6 +1,8 @@
-package Commands;
+package Commands.Calendar;
 
+import Commands.Command;
 import Commands.Food.LunchMessager;
+import DataHandlers.CalendarHandler;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 import java.text.ParseException;
@@ -21,7 +23,7 @@ public class RemoveSession extends Command {
     @Override
     public void run(String[] args, GuildMessageReceivedEvent e) {
         if (args.length == 1) {
-            CalendarHandler calendarHandler = new CalendarHandler();
+            CalendarHandler calendarHandler = new CalendarHandler(e.getGuild());
             if (!args[0].equalsIgnoreCase("all")) {
                 try {
                     Date date = storesdf.parse(args[0]);

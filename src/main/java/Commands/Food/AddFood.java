@@ -1,11 +1,8 @@
 package Commands.Food;
 
 import Commands.Command;
+import DataHandlers.FoodHandler;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
-import org.json.simple.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 public class AddFood extends Command {
 
@@ -19,7 +16,7 @@ public class AddFood extends Command {
     @Override
     public void run(String[] args, GuildMessageReceivedEvent e) {
         if (args.length == 2){
-            FoodHandler foodHandler = new FoodHandler();
+            FoodHandler foodHandler = new FoodHandler(e.getGuild());
             int index = foodHandler.checkFood(args[1]);
             if (index == -1) {
                 foodHandler.addFood(args[0], args[1]);

@@ -1,5 +1,7 @@
-package Commands;
+package Commands.Calendar;
 
+import DataHandlers.CalendarHandler;
+import Commands.Command;
 import Commands.Food.LunchMessager;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
@@ -24,7 +26,7 @@ public class AddSession extends Command {
     @Override
     public void run(String[] args, GuildMessageReceivedEvent e) {
         if (args.length == 1) {
-            CalendarHandler calendarHandler = new CalendarHandler();
+            CalendarHandler calendarHandler = new CalendarHandler(e.getGuild());
             try{
                 Date date = storesdf.parse(args[0]);
                 ArrayList<Date> dates = calendarHandler.getSessions(false);

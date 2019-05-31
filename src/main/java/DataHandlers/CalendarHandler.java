@@ -1,5 +1,6 @@
-package Commands;
+package DataHandlers;
 
+import net.dv8tion.jda.core.entities.Guild;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -12,40 +13,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-public class CalendarHandler {
+public class CalendarHandler extends DataHandler{
 
     private SimpleDateFormat storesdf;
-    private JSONObject jsonObject;
+    private JSONArray dates;
 
-    public CalendarHandler() {
-        JSONParser parser = new JSONParser();
-        try (FileReader reader = new FileReader("src/main/resources/Dates.json")) {
-            jsonObject = (JSONObject) parser.parse(reader);
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
+    public CalendarHandler(Guild g){
+        super(g);
         storesdf = new SimpleDateFormat("dd/MM/yyyy");
-
+        dates = (JSONArray)((JSONObject) jsonObject.get(guild)).get("Dates");
     }
 
 
-
+    @SuppressWarnings("unchecked")
     public void addSession(Date date) {
-        JSONArray jsonArray = ((JSONArray) jsonObject.get("Dates"));
-        jsonArray.add(storesdf.format(date));
+        dates.add(storesdf.format(date));
         save();
     }
 
     public void removeSession(Date date) {
-        JSONArray jsonArray = ((JSONArray) jsonObject.get("Dates"));
-        jsonArray.remove(storesdf.format(date));
+        dates.remove(storesdf.format(date));
         save();
     }
 
     public ArrayList<Date> getSessions(boolean allsessions) {
-        JSONArray jsonArray = (JSONArray) jsonObject.get("Dates");
         ArrayList<Date> dates = new ArrayList<>();
-        for (Object date : jsonArray.toArray()) {
+        for (Object date : dates.toArray()) {
             try {
                 String d = (String) date;
                 Date da = storesdf.parse(d);
@@ -59,14 +52,5 @@ public class CalendarHandler {
         }
         Collections.sort(dates);
         return dates;
-    }
-
-    public void save() {
-        try (FileWriter file = new FileWriter("src/main/resources/Dates.json")) {
-            file.write(jsonObject.toJSONString());
-            file.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

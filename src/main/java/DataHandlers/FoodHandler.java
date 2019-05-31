@@ -1,5 +1,6 @@
-package Commands.Food;
+package DataHandlers;
 
+import net.dv8tion.jda.core.entities.Guild;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -12,47 +13,41 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FoodHandler {
+public class FoodHandler extends DataHandler{
 
-    private JSONObject jsonObject;
+    private JSONArray food;
 
-    public FoodHandler() {
-        JSONParser parser = new JSONParser();
-        try (FileReader reader = new FileReader("src/main/resources/Food.json")) {
-            jsonObject = (JSONObject) parser.parse(reader);
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
+
+    public FoodHandler(Guild g) {
+        super(g);
+        food = (JSONArray)((JSONObject) jsonObject.get(guild)).get("Food");
     }
-
+    @SuppressWarnings("unchecked")
     public void addFood(String name, String emoji){
-        JSONArray foods = (JSONArray) jsonObject.get("Food");
-        Map<String, String> food = new HashMap<>();
-        food.put("Name", name);
-        food.put("Emoji", emoji);
-        foods.add(new JSONObject(food));
+        Map<String, String> foodMap = new HashMap<>();
+        foodMap.put("Name", name);
+        foodMap.put("Emoji", emoji);
+        food.add(new JSONObject(foodMap));
         save();
     }
 
     public void removeFood(int i){
-        JSONArray foods = (JSONArray) jsonObject.get("Food");
-        foods.remove(i);
+        food.remove(i);
         save();
     }
 
     public ArrayList<Map<String, String>> getFood(){
-        JSONArray jsonArray = (JSONArray) jsonObject.get("Food");
-        ArrayList<Map<String, String>> food = new ArrayList<>();
-        for (Object object : jsonArray){
+        ArrayList<Map<String, String>> foodList = new ArrayList<>();
+        for (Object object : food){
             Map<String, String> f = new HashMap<>();
             JSONObject obj = (JSONObject) object;
             for (Object s : obj.keySet()){
                 String name = (String) s;
                 f.put(name, (String) obj.get(name));
             }
-            food.add(f);
+            foodList.add(f);
         }
-        return food;
+        return foodList;
     }
 
     public int checkFood(String emoji){
@@ -69,15 +64,6 @@ public class FoodHandler {
             return i - 1;
         } else {
             return -1;
-        }
-    }
-
-    public void save() {
-        try (FileWriter file = new FileWriter("src/main/resources/Food.json")) {
-            file.write(jsonObject.toJSONString());
-            file.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

@@ -1,6 +1,7 @@
 package Commands.Food;
 
 import Commands.Command;
+import DataHandlers.FoodHandler;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class RemoveFood extends Command {
     @Override
     public void run(String[] args, GuildMessageReceivedEvent e) {
         if (args.length == 1){
-            FoodHandler foodHandler = new FoodHandler();
+            FoodHandler foodHandler = new FoodHandler(e.getGuild());
             if (isInteger(args[0])){
                 int i = Integer.parseInt(args[0]) - 1;
                 ArrayList<Map<String, String>> food = foodHandler.getFood();
@@ -49,14 +50,5 @@ public class RemoveFood extends Command {
     @Override
     public String getDescription() {
         return "Remove food from the lunch-list";
-    }
-
-    public boolean isInteger(String s) {
-        try {
-            Integer.parseInt(s);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
     }
 }

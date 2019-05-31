@@ -1,11 +1,11 @@
 package Commands.Food;
 
 import Commands.Command;
+import DataHandlers.FoodHandler;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 
 public class GetFood extends Command {
@@ -19,7 +19,7 @@ public class GetFood extends Command {
     @Override
     public void run(String[] args, GuildMessageReceivedEvent e) {
         if (args.length == 0){
-            FoodHandler f = new FoodHandler();
+            FoodHandler f = new FoodHandler(e.getGuild());
             EmbedBuilder eb = new EmbedBuilder();
             StringBuilder sb = new StringBuilder();
             ArrayList<Map<String, String>> foods = f.getFood();

@@ -1,4 +1,6 @@
-package Commands;
+package Commands.Calendar;
+import DataHandlers.CalendarHandler;
+import Commands.Command;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
@@ -6,7 +8,7 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class Calendar extends Command{
+public class Calendar extends Command {
 
     private SimpleDateFormat sdf;
 
@@ -19,7 +21,7 @@ public class Calendar extends Command{
 
     @Override
     public void run(String[] args, GuildMessageReceivedEvent e) {
-        CalendarHandler calendarHandler = new CalendarHandler();
+        CalendarHandler calendarHandler = new CalendarHandler(e.getGuild());
         EmbedBuilder eb = new EmbedBuilder();
         StringBuilder sb = new StringBuilder();
         ArrayList<String> dates = new ArrayList<>();
