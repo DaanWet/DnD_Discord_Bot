@@ -1,55 +1,58 @@
 package DataHandlers;
 
 import net.dv8tion.jda.core.entities.Guild;
-import org.json.simple.*;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 
-public class CalendarHandler extends DataHandler{
+/**
+ * Breidt DataHandler uit met kalenderverwerking
+ */
+public class CalendarHandler extends DataHandler {
 
-    private SimpleDateFormat storesdf;
+    private DateTimeFormatter storesdf;
     private JSONArray dates;
 
-    public CalendarHandler(Guild g){
+    public CalendarHandler(Guild g) {
         super(g);
-        storesdf = new SimpleDateFormat("dd/MM/yyyy");
-        dates = (JSONArray)((JSONObject) jsonObject.get(guild)).get("Dates");
+
+        storesdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        dates = (JSONArray) ((JSONObject) jsonObject.get(guild)).get("Dates");
     }
 
 
     @SuppressWarnings("unchecked")
-    public void addSession(Date date) {
-        dates.add(storesdf.format(date));
+    public void addSession(LocalDateTime date) {
+        dates.add(date.format(storesdf));
         save();
     }
 
-    public void removeSession(Date date) {
-        dates.remove(storesdf.format(date));
+    public void removeSession(LocalDateTime date) {
+        dates.remove(date.format(storesdf));
         save();
     }
 
-    public ArrayList<Date> getSessions(boolean allsessions) {
-        ArrayList<Date> datesList = new ArrayList<>();
-        for (Object date : dates.toArray()) {
+    public ArrayList<LocalDateTime> getSessions(boolean allsessions) {
+        ArrayList<LocalDateTime> datesList = new ArrayList<>();
+        Arrays.stream(dates.toArray()).forEach(date -> {
             try {
-                String d = (String) date;
-                Date da = storesdf.parse(d);
-                Date today = new Date();
-                if (allsessions || da.after(new Date(today.getTime() - (1000 * 60 * 60 * 24)))) {
+                LocalDateTime da = storesdf.parse((String) date, LocalDateTime::from);
+
+                if (allsessions || da.isAfter(LocalDateTime.now().minusDays(1))) {
                     datesList.add(da);
                 }
-            } catch (java.text.ParseException exc) {
+            } catch (DateTimeParseException exc) {
                 exc.printStackTrace();
             }
-        }
+        });
+
         Collections.sort(datesList);
         return datesList;
     }

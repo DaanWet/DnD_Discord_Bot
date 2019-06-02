@@ -9,18 +9,20 @@ import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
+/**
+ * Verwerkt de gegevens van een Guild en zet dit om naar een Java-verwerkbaar formaat.
+ */
 public class DataHandler {
 
-    protected JSONObject jsonObject;
+    JSONObject jsonObject;
     protected String guild;
 
     @SuppressWarnings("unchecked")
-    public DataHandler(Guild g) {
+    DataHandler(Guild g) {
         JSONParser parser = new JSONParser();
         guild = g.getId();
+
         try (FileReader reader = new FileReader("src/main/resources/Data.json")) {
             jsonObject = ((JSONObject) parser.parse(reader));
             if (!jsonObject.containsKey(g.getId())) {
@@ -37,7 +39,7 @@ public class DataHandler {
         }
     }
 
-    public void save() {
+    void save() {
         try (FileWriter file = new FileWriter("src/main/resources/Data.json")) {
             file.write(jsonObject.toJSONString());
             file.flush();

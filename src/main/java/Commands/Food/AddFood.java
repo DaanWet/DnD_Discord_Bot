@@ -20,9 +20,9 @@ public class AddFood extends Command {
             int index = foodHandler.checkFood(args[1]);
             if (index == -1) {
                 foodHandler.addFood(args[0], args[1]);
-                e.getChannel().sendMessage("Succesfully added " + args[0] + " to the lunch-list with " + args[1] + " as emoji").queue();
+                e.getChannel().sendMessage(String.format("Succesfully added %s to the lunch-list with %s as emoji", args[0], args[1])).queue();
             } else {
-                e.getChannel().sendMessage("The emoji " + args[1] + " already is part of the lunch-list").queue();
+                e.getChannel().sendMessage(String.format("The emoji %s already is part of the lunch-list", args[1])).queue();
             }
         } else {
             e.getChannel().sendMessage("Usage: /addfood <Name> <Emoji>").queue();
