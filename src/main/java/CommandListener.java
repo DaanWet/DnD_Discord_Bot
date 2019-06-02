@@ -30,7 +30,7 @@ public class CommandListener extends ListenerAdapter {
     );
 
     private ArrayList<Command> commands = new ArrayList<>(Arrays.asList(new Calendar(), new AddSession(), new RemoveSession(), new AddFood(), new GetFood(), new RemoveFood()));
-    private ArrayList<Command> testcommands = new ArrayList<>(Collections.singletonList(new DungeonMaster()));
+    private ArrayList<Command> testcommands = new ArrayList<>(Arrays.asList(new DungeonMaster()));
 
 
     /**
