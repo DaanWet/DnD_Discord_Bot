@@ -3,8 +3,10 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Guild;
 
+/**
+ * https://discordapp.com/api/oauth2/authorize?client_id=577940186755891211&permissions=470281280&scope=bot
+ */
 public class Main {
 
     public static void main(String[] args) throws Exception {
@@ -13,9 +15,6 @@ public class Main {
         jda.setAutoReconnect(true);
         jda.addEventListener(new CommandListener());
         jda.awaitReady();
-        for (Guild g : jda.getGuilds()) {
-            LunchMessager.onRestart(g);
-        }
-        //https://discordapp.com/api/oauth2/authorize?client_id=577940186755891211&permissions=470281280&scope=bot
+        jda.getGuilds().forEach(LunchMessager::onRestart);
     }
 }

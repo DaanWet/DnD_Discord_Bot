@@ -1,19 +1,20 @@
 package Commands.Calendar;
-import DataHandlers.CalendarHandler;
+
 import Commands.Command;
+import DataHandlers.CalendarHandler;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 import java.awt.*;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Calendar extends Command {
 
-    private SimpleDateFormat sdf;
+    private DateTimeFormatter sdf;
 
-    public Calendar(){
-        sdf = new SimpleDateFormat("EE dd MMM yyyy");
+    public Calendar() {
+        sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         this.name = "calendar";
         this.aliases = new String[]{"cal"};
         this.category = "Calendar";
