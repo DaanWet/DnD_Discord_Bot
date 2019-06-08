@@ -4,13 +4,14 @@ import Commands.*;
 import Commands.Calendar.AddSession;
 import Commands.Calendar.Calendar;
 import Commands.Calendar.RemoveSession;
-import Commands.Character;
+import Commands.Users.Character;
 import Commands.Food.AddFood;
 import Commands.Food.GetFood;
 import Commands.Food.RemoveFood;
+import Commands.Users.DungeonMaster;
+import Commands.Users.ShowPlayer;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.awt.*;
 import java.util.*;
@@ -30,12 +31,11 @@ public class CommandListener {
             "d100", new Dice(100)
 
     );
-
-    private ArrayList<Command> commands = new ArrayList<>(Arrays.asList(new Calendar(), new AddSession(), new RemoveSession(), new AddFood(), new GetFood(), new RemoveFood(), new SetConfig()));
-    private ArrayList<Command> testcommands;
+    private ArrayList<Command> commands;
+    private ArrayList<Command> testcommands = new ArrayList<>();
 
     public CommandListener(MessageListener l) {
-        testcommands = new ArrayList<>(Arrays.asList(new DungeonMaster(), new Character(l)));
+        commands = new ArrayList<>(Arrays.asList(new Calendar(), new AddSession(), new RemoveSession(), new AddFood(), new GetFood(), new RemoveFood(), new SetConfig(),new DungeonMaster(), new ShowPlayer(), new Character(l)));
     }
 
     /**

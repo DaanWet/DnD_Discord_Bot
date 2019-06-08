@@ -1,5 +1,6 @@
-package Commands;
+package Commands.Users;
 
+import Commands.Command;
 import Players.DM;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
@@ -8,11 +9,12 @@ import net.dv8tion.jda.core.managers.GuildController;
 
 import java.util.List;
 
-public class DungeonMaster extends Command{
+public class DungeonMaster extends Command {
 
     public DungeonMaster(){
         this.name = "dm";
         this.aliases = new String[]{"DungeonMaster"};
+        this.category = "Players/Users";
     }
 
 
@@ -61,6 +63,6 @@ public class DungeonMaster extends Command{
 
     @Override
     public String getDescription() {
-        return null;
+        return "Claims or passes DM role";
     }
 }

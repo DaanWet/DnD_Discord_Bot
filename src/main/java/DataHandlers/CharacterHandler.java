@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,13 +42,23 @@ public class CharacterHandler extends DataHandler {
         int i = 0;
         while (!found && i < characters.size()){
             JSONObject character = (JSONObject) characters.get(i);
-            if (character.get(type).equals(name)){
+            if (((String)character.get(type)).equalsIgnoreCase(name)){
                 found = true;
             } else {
                 i ++;
             }
         }
         return found? i : -1;
+    }
+    @SuppressWarnings("unchecked")
+    public ArrayList<Map<String, String>> getAllCharacters(boolean npc_only){
+        ArrayList<Map<String, String>> list = new ArrayList<>();
+        characters.forEach(object -> {
+            if (!npc_only || ((JSONObject) object).get("userid").equals("")) {
+                list.add(((JSONObject) object));
+            }
+        });
+        return list;
     }
 
 }
