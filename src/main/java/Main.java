@@ -1,4 +1,5 @@
 import Commands.Food.LunchMessager;
+import Listeners.MessageListener;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
@@ -13,7 +14,7 @@ public class Main {
         JDA jda = new JDABuilder(args[0]).build();
         jda.getPresence().setPresence(OnlineStatus.ONLINE, Game.of(Game.GameType.LISTENING, "/commands"));
         jda.setAutoReconnect(true);
-        jda.addEventListener(new CommandListener());
+        jda.addEventListener(new MessageListener());
         jda.awaitReady();
         jda.getGuilds().forEach(LunchMessager::onRestart);
     }

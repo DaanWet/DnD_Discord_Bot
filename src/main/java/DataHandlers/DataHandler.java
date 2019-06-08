@@ -9,6 +9,8 @@ import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Verwerkt de gegevens van een Guild en zet dit om naar een Java-verwerkbaar formaat.
@@ -28,9 +30,17 @@ public class DataHandler {
             if (!jsonObject.containsKey(g.getId())) {
                 JSONArray food = new JSONArray();
                 JSONArray dates = new JSONArray();
+                JSONArray characters = new JSONArray();
+                Map<String, String> configs = Map.of(
+                        "DM", "0",
+                        "Player", "0"
+                );
+                JSONObject config = new JSONObject(configs);
                 JSONObject data = new JSONObject();
                 data.put("Food", food);
                 data.put("Dates", dates);
+                data.put("Characters", characters);
+                data.put("Config", config);
                 jsonObject.put(g.getId(), data);
                 save();
             }

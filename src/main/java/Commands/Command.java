@@ -69,7 +69,7 @@ public abstract class Command {
         return true;
     }
 
-    private static boolean isLong(String s) {
+    public static boolean isLong(String s) {
         try {
             Long.parseLong(s);
         } catch (Exception e) {
