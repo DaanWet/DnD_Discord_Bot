@@ -1,7 +1,10 @@
 package Listeners;
 
 import Players.CharacterSheet.CharacterSheetBuilder;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.core.events.message.priv.GenericPrivateMessageEvent;
+import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.ArrayList;
@@ -24,7 +27,7 @@ public class MessageListener extends ListenerAdapter {
                 i++;
             }
         }
-        String message = e.getMessage().getContentRaw();
+        String message = e.getMessage().getContentRaw().trim();
         if (notInList) {
             String[] words = message.split(" ");
             if (message.length() > 0 && words[0].charAt(0) == '/') {
@@ -33,6 +36,11 @@ public class MessageListener extends ListenerAdapter {
         } else {
             builders.get(i).answer(message);
         }
+    }
+
+    @Override
+    public void onPrivateMessageReceived(PrivateMessageReceivedEvent e){
+
     }
 
     public void addBuilder(CharacterSheetBuilder b) {

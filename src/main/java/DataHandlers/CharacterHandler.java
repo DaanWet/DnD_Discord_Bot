@@ -7,7 +7,7 @@ import org.json.simple.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+@SuppressWarnings("unchecked")
 public class CharacterHandler extends DataHandler {
 
     private JSONArray characters;
@@ -16,12 +16,12 @@ public class CharacterHandler extends DataHandler {
         super(g);
         characters = (JSONArray) ((JSONObject) jsonObject.get(guild)).get("Characters");
     }
-    @SuppressWarnings("unchecked")
+
     public void addCharacter(Map<String, String> character){
         characters.add(new JSONObject(character));
         save();
     }
-    @SuppressWarnings("unchecked")
+
     public Map<String, String> getCharacter(String name, String type){
         Map<String, String> characterSheet = null;
         int index = getIndex(name, type);
@@ -42,6 +42,7 @@ public class CharacterHandler extends DataHandler {
         int i = 0;
         while (!found && i < characters.size()){
             JSONObject character = (JSONObject) characters.get(i);
+            System.out.println(((String)character.get(type)));
             if (((String)character.get(type)).equalsIgnoreCase(name)){
                 found = true;
             } else {
@@ -50,7 +51,7 @@ public class CharacterHandler extends DataHandler {
         }
         return found? i : -1;
     }
-    @SuppressWarnings("unchecked")
+
     public ArrayList<Map<String, String>> getAllCharacters(boolean npc_only){
         ArrayList<Map<String, String>> list = new ArrayList<>();
         characters.forEach(object -> {
@@ -59,6 +60,14 @@ public class CharacterHandler extends DataHandler {
             }
         });
         return list;
+    }
+
+    public void editCharacter(String name, String attribute, String newValue){
+        int index = getIndex(name, "name");
+        JSONObject character = (JSONObject) characters.get(index);
+        character.putIfAbsent(attribute, "");
+        character.replace(attribute, newValue);
+        save();
     }
 
 }

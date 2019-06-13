@@ -18,7 +18,7 @@ public class CharacterSheetBuilder {
     private TextChannel channel;
     private Member user;
     private MessageListener messageListener;
-    private static final String[] attributes = new String[]{"userid", "name", "race", "class", "background", "alignment"};
+    private static final String[] attributes = new String[]{"userid", "name"};//, "race", "class", "background", "alignment"};
     private int current;
     private Map<String, String> characterSheet = new HashMap<>();
     private String lastMessage;
@@ -109,5 +109,9 @@ public class CharacterSheetBuilder {
 
     public void setLastMessage(String id) {
         lastMessage = id;
+    }
+
+    public static ArrayList<String> getAttributes(){
+        return new ArrayList<>(Arrays.asList(attributes));
     }
 }

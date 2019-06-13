@@ -23,14 +23,8 @@ public class LunchMessager {
     public static void makeMessage(LocalDateTime date, Guild g) {
         LocalDateTime messagedate = (date == null) ? LocalDateTime.MIN : date.minusDays(1);
         long diff = messagedate.compareTo(LocalDateTime.now());
-        TextChannel ch;
-        if (g.getTextChannelsByName("bot-test", true).size() > 0) {
-            ch = g.getTextChannelsByName("bot-test", true).get(0);
-        } else {
-            ch = g.getDefaultChannel();
-        }
-
-        // TODO: Wat te doen met de warnings voor NullPointerException?
+        ConfigHandler cfgh = new ConfigHandler(g);
+        TextChannel ch = g.getTextChannelById(cfgh.getChannel("FoodChannel"));
         if (date == null | diff <= 0) {
             ch.sendMessage(getFood(date, g)).queue(message -> getEmojis(g).forEach(s -> message.addReaction(s).queue()));
         } else {
@@ -47,17 +41,15 @@ public class LunchMessager {
     }
 
     public static void onRestart(Guild g) {
-        List<TextChannel> t = g.getTextChannelsByName("bot-test", true);
-        if (t.size() > 0) {
-            CalendarHandler calendarHandler = new CalendarHandler(g);
-            ArrayList<LocalDateTime> sessions = calendarHandler.getSessions(false);
-            sessions.forEach(session -> {
-                LocalDateTime messagedate = session.minusDays(1);
-                if (messagedate.atZone(ZoneId.systemDefault()).toEpochSecond() - System.currentTimeMillis() > 0) {
-                    makeMessage(session, g);
-                }
-            });
-        }
+        CalendarHandler calendarHandler = new CalendarHandler(g);
+        ArrayList<LocalDateTime> sessions = calendarHandler.getSessions(false);
+        sessions.forEach(session -> {
+            LocalDateTime messagedate = session.minusDays(1);
+            if (messagedate.atZone(ZoneId.systemDefault()).toEpochSecond() - System.currentTimeMillis() > 0) {
+                makeMessage(session, g);
+            }
+        });
+
     }
 
     private static String getFood(LocalDateTime date, Guild g) {

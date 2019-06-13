@@ -19,11 +19,13 @@ public class DataHandler {
 
     JSONObject jsonObject;
     protected String guild;
+    protected Guild g;
 
     @SuppressWarnings("unchecked")
     DataHandler(Guild g) {
         JSONParser parser = new JSONParser();
         guild = g.getId();
+        this.g = g;
 
         try (FileReader reader = new FileReader("src/main/resources/Data.json")) {
             jsonObject = ((JSONObject) parser.parse(reader));
@@ -31,10 +33,7 @@ public class DataHandler {
                 JSONArray food = new JSONArray();
                 JSONArray dates = new JSONArray();
                 JSONArray characters = new JSONArray();
-                Map<String, String> configs = Map.of(
-                        "DM", "0",
-                        "Player", "0"
-                );
+                Map<String, String> configs = new HashMap<>();
                 JSONObject config = new JSONObject(configs);
                 JSONObject data = new JSONObject();
                 data.put("Food", food);

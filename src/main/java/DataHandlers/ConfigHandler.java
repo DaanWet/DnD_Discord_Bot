@@ -1,9 +1,8 @@
 package DataHandlers;
 
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Role;
 import org.json.simple.JSONObject;
-
+@SuppressWarnings("unchecked")
 public class ConfigHandler extends DataHandler{
 
     private JSONObject config;
@@ -14,15 +13,23 @@ public class ConfigHandler extends DataHandler{
     }
 
     public String getDMRoleID(){
-        return (String) config.get("DM");
+        return getRole("DM");
     }
     public String getPlayerRoleID(){
-        return (String) config.get("Player");
+        return getRole("Player");
+}
+
+
+    public void setConfig(String id, String key){
+        config.put(key, id);
+        save();
     }
 
-    @SuppressWarnings("unchecked")
-    public void setRoleID(String id, String role){
-        Object key = config.replace(role, id);
-        save();
+    public String getRole(String key){
+        return (String) config.getOrDefault(key, "0");
+    }
+
+    public String getChannel(String key){
+        return (String) config.getOrDefault(key, g.getDefaultChannel().getId());
     }
 }
