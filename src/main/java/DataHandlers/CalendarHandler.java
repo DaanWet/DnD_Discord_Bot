@@ -43,7 +43,7 @@ public class CalendarHandler extends DataHandler {
         ArrayList<LocalDateTime> datesList = new ArrayList<>();
         Arrays.stream(dates.toArray()).forEach(date -> {
             try {
-                LocalDateTime da = storesdf.parse((String) date, LocalDateTime::from);
+                LocalDateTime da = storesdf.parse((String) date, LocalDate::from).atStartOfDay();
 
                 if (allsessions || da.isAfter(LocalDateTime.now().minusDays(1))) {
                     datesList.add(da);

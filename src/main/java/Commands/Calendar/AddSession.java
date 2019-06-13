@@ -7,9 +7,11 @@ import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -31,10 +33,9 @@ public class AddSession extends Command {
         if (args.length == 1) {
             CalendarHandler calendarHandler = new CalendarHandler(e.getGuild());
             try{
-                LocalDateTime date = LocalDateTime.from(storesdf.parse(args[0]));
+                LocalDateTime date = LocalDate.from(storesdf.parse(args[0])).atStartOfDay(); //LocalDateTime.parse(args[0], storesdf);
                 ArrayList<LocalDateTime> dates = calendarHandler.getSessions(false);
-
-                if (date.isAfter(LocalDateTime.now().minusDays(1))) {
+                if (date.isAfter(LocalDateTime.now().minusHours(12))) {
                     if (!dates.contains(date)) {
                         calendarHandler.addSession(date);
                         e.getChannel().sendMessage("Succesfully added a session on " + args[0]).queue();
@@ -46,6 +47,7 @@ public class AddSession extends Command {
                     e.getChannel().sendMessage("You cannot plan a session in the past").queue();
                 }
             } catch (DateTimeParseException exc){
+                exc.printStackTrace();
                 e.getChannel().sendMessage("Usage: /addsession [dd/MM/yyyy]").queue();
             }
 

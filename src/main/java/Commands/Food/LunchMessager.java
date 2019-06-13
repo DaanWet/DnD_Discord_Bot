@@ -1,13 +1,17 @@
 package Commands.Food;
 
 import DataHandlers.CalendarHandler;
+import DataHandlers.ConfigHandler;
 import DataHandlers.FoodHandler;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 
+import java.io.ObjectInputFilter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,13 +21,14 @@ import java.util.concurrent.TimeUnit;
 
 public class LunchMessager {
 
-    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private static DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static Map<LocalDateTime, ScheduledFuture> map = new HashMap<>();
 
     public static void makeMessage(LocalDateTime date, Guild g) {
-        LocalDateTime messagedate = (date == null) ? LocalDateTime.MIN : date.minusDays(1);
-        long diff = messagedate.compareTo(LocalDateTime.now());
+        LocalDateTime messagedate = (date == null) ? LocalDateTime.MIN : date;
         ConfigHandler cfgh = new ConfigHandler(g);
+        long diff = ChronoUnit.MILLIS.between(LocalDateTime.now(), messagedate);// messagedate.compareTo(LocalDateTime.now());
+        System.out.println(diff);
         TextChannel ch = g.getTextChannelById(cfgh.getChannel("FoodChannel"));
         if (date == null | diff <= 0) {
             ch.sendMessage(getFood(date, g)).queue(message -> getEmojis(g).forEach(s -> message.addReaction(s).queue()));

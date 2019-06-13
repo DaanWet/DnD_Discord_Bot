@@ -7,6 +7,7 @@ import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -29,7 +30,7 @@ public class RemoveSession extends Command {
             CalendarHandler calendarHandler = new CalendarHandler(e.getGuild());
             if (!args[0].equalsIgnoreCase("all")) {
                 try {
-                    LocalDateTime date = LocalDateTime.from(storesdf.parse(args[0]));
+                    LocalDateTime date = LocalDate.from(storesdf.parse(args[0])).atStartOfDay();
                     ArrayList<LocalDateTime> dates = calendarHandler.getSessions(true);
                     if (dates.contains(date)) {
                         calendarHandler.removeSession(date);
