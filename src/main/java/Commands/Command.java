@@ -75,7 +75,6 @@ public abstract class Command {
         } catch (Exception e) {
             return false;
         }
-
         return true;
     }
 }

@@ -35,7 +35,7 @@ public class RemoveSession extends Command {
                     if (dates.contains(date)) {
                         calendarHandler.removeSession(date);
                         e.getChannel().sendMessage("Succesfully removed the session on " + args[0]).queue();
-                        LunchMessager.cancelMessage(date);
+                        SessionReminder.cancelSession(date);
                     } else {
                         e.getChannel().sendMessage("There is no session on " + args[0]).queue();
                     }

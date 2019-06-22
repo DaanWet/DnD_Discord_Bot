@@ -42,7 +42,6 @@ public class CharacterHandler extends DataHandler {
         int i = 0;
         while (!found && i < characters.size()){
             JSONObject character = (JSONObject) characters.get(i);
-            System.out.println(((String)character.get(type)));
             if (((String)character.get(type)).equalsIgnoreCase(name)){
                 found = true;
             } else {
@@ -62,12 +61,22 @@ public class CharacterHandler extends DataHandler {
         return list;
     }
 
+    public ArrayList<String> getAllCharacterNames(boolean npc_only){
+        ArrayList<String> names = new ArrayList<>();
+        getAllCharacters(npc_only).forEach(map -> names.add(map.get("name")));
+        return names;
+    }
+
     public void editCharacter(String name, String attribute, String newValue){
         int index = getIndex(name, "name");
         JSONObject character = (JSONObject) characters.get(index);
         character.putIfAbsent(attribute, "");
         character.replace(attribute, newValue);
         save();
+    }
+
+    public String getPicture(String name, String type){
+        return getCharacter(name, type).getOrDefault("picture", "");
     }
 
 }

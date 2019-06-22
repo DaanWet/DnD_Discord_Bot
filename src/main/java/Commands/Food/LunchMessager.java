@@ -3,19 +3,16 @@ package Commands.Food;
 import DataHandlers.CalendarHandler;
 import DataHandlers.ConfigHandler;
 import DataHandlers.FoodHandler;
+import DataHandlers.NPCMessageHandler;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-import java.io.ObjectInputFilter;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -23,19 +20,15 @@ public class LunchMessager {
 
     private static DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static Map<LocalDateTime, ScheduledFuture> map = new HashMap<>();
+    private static Random random = new Random();
 
     public static void makeMessage(LocalDateTime date, Guild g) {
-        LocalDateTime messagedate = (date == null) ? LocalDateTime.MIN : date;
-        ConfigHandler cfgh = new ConfigHandler(g);
-        long diff = ChronoUnit.MILLIS.between(LocalDateTime.now(), messagedate);// messagedate.compareTo(LocalDateTime.now());
-        System.out.println(diff);
-        TextChannel ch = g.getTextChannelById(cfgh.getChannel("FoodChannel"));
-        if (date == null | diff <= 0) {
-            ch.sendMessage(getFood(date, g)).queue(message -> getEmojis(g).forEach(s -> message.addReaction(s).queue()));
-        } else {
-            ScheduledFuture<?> task = ch.sendMessage(getFood(date, g)).queueAfter(diff, TimeUnit.MILLISECONDS, message -> getEmojis(g).forEach(s -> message.addReaction(s).queue()));
-            map.put(date, task);
-        }
+        LocalDateTime messagedate = (date == null) ? LocalDateTime.now() : date;
+        long diff = ChronoUnit.MILLIS.between(LocalDateTime.now(), messagedate);
+        TextChannel ch = g.getTextChannelById(new ConfigHandler(g).getChannel("FoodChannel"));
+        ScheduledFuture<?> task = ch.sendMessage(getFood(date, g)).queueAfter(diff > 0 ? diff : 0, TimeUnit.MILLISECONDS, message -> getEmojis(g).forEach(s -> message.addReaction(s).queue()));
+        map.put(date, task);
+
     }
 
     public static void cancelMessage(LocalDateTime date) {
@@ -45,24 +38,11 @@ public class LunchMessager {
         }
     }
 
-    public static void onRestart(Guild g) {
-        CalendarHandler calendarHandler = new CalendarHandler(g);
-        ArrayList<LocalDateTime> sessions = calendarHandler.getSessions(false);
-        sessions.forEach(session -> {
-            LocalDateTime messagedate = session.minusDays(1);
-            if (messagedate.atZone(ZoneId.systemDefault()).toEpochSecond() - System.currentTimeMillis() > 0) {
-                makeMessage(session, g);
-            }
-        });
-
-    }
-
     private static String getFood(LocalDateTime date, Guild g) {
         FoodHandler f = new FoodHandler(g);
         StringBuilder sb = new StringBuilder();
         sb.append("Wat eten we ?").append(date != null ? " Session: " + sdf.format(date) : "");
         f.getFood().forEach(food -> sb.append("\n").append(food.get("Name")).append(": ").append(food.get("Emoji")));
-
         return sb.toString();
     }
 

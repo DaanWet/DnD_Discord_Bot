@@ -24,7 +24,7 @@ public class CalendarHandler extends DataHandler {
         super(g);
 
         storesdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        dates = (JSONArray) ((JSONObject) jsonObject.get(guild)).get("Dates");
+        dates = (JSONArray) guildObject.get("Dates");
     }
 
 

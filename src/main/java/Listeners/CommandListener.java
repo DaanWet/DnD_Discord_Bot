@@ -4,6 +4,9 @@ import Commands.*;
 import Commands.Calendar.AddSession;
 import Commands.Calendar.Calendar;
 import Commands.Calendar.RemoveSession;
+import Commands.NPCMessages.AddMessage;
+import Commands.NPCMessages.RemoveMessage;
+import Commands.NPCMessages.ShowMessages;
 import Commands.Users.Character;
 import Commands.Food.AddFood;
 import Commands.Food.GetFood;
@@ -35,7 +38,9 @@ public class CommandListener {
     private ArrayList<Command> testcommands = new ArrayList<>();
 
     public CommandListener(MessageListener l) {
-        commands = new ArrayList<>(Arrays.asList(new Calendar(), new AddSession(), new RemoveSession(), new AddFood(), new GetFood(), new RemoveFood(), new SetConfig(),new DungeonMaster(), new ShowPlayer(), new Character(l)));
+        commands = new ArrayList<>(Arrays.asList(new Calendar(), new AddSession(), new RemoveSession(), new AddFood(), new GetFood(),
+                new RemoveFood(), new SetConfig(),new DungeonMaster(), new ShowPlayer(), new Character(l), new AddMessage(),
+                new RemoveMessage(), new ShowMessages()));
     }
 
     /**

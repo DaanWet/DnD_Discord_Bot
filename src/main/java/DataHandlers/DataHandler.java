@@ -15,37 +15,39 @@ import java.util.Map;
 /**
  * Verwerkt de gegevens van een Guild en zet dit om naar een Java-verwerkbaar formaat.
  */
+@SuppressWarnings("unchecked")
 public class DataHandler {
 
     JSONObject jsonObject;
     protected String guild;
     protected Guild g;
+    protected JSONObject guildObject;
 
-    @SuppressWarnings("unchecked")
     DataHandler(Guild g) {
         JSONParser parser = new JSONParser();
         guild = g.getId();
         this.g = g;
-
         try (FileReader reader = new FileReader("src/main/resources/Data.json")) {
             jsonObject = ((JSONObject) parser.parse(reader));
             if (!jsonObject.containsKey(g.getId())) {
                 JSONArray food = new JSONArray();
                 JSONArray dates = new JSONArray();
                 JSONArray characters = new JSONArray();
-                Map<String, String> configs = new HashMap<>();
-                JSONObject config = new JSONObject(configs);
+                JSONObject config = new JSONObject();
+                JSONObject messages = new JSONObject();
                 JSONObject data = new JSONObject();
                 data.put("Food", food);
                 data.put("Dates", dates);
                 data.put("Characters", characters);
                 data.put("Config", config);
+                data.put("Messages", messages);
                 jsonObject.put(g.getId(), data);
                 save();
             }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
+        guildObject = (JSONObject) jsonObject.get(guild);
     }
 
     void save() {

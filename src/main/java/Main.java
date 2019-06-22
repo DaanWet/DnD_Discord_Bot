@@ -1,5 +1,7 @@
+import Commands.Calendar.SessionReminder;
 import Commands.Food.LunchMessager;
 import Listeners.MessageListener;
+import Listeners.PrivateMessageListener;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
@@ -15,7 +17,8 @@ public class Main {
         jda.getPresence().setPresence(OnlineStatus.ONLINE, Game.of(Game.GameType.LISTENING, "/commands"));
         jda.setAutoReconnect(true);
         jda.addEventListener(new MessageListener());
+        jda.addEventListener(new PrivateMessageListener());
         jda.awaitReady();
-        jda.getGuilds().forEach(LunchMessager::onRestart);
+        jda.getGuilds().forEach(SessionReminder::onRestart);
     }
 }

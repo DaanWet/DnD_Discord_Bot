@@ -6,10 +6,12 @@ import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.priv.GenericPrivateMessageEvent;
 import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Luisteraar die luistert naar berichten
+ */
 public class MessageListener extends ListenerAdapter {
 
 
@@ -37,12 +39,6 @@ public class MessageListener extends ListenerAdapter {
             builders.get(i).answer(message);
         }
     }
-
-    @Override
-    public void onPrivateMessageReceived(PrivateMessageReceivedEvent e){
-
-    }
-
     public void addBuilder(CharacterSheetBuilder b) {
         builders.add(b);
     }
