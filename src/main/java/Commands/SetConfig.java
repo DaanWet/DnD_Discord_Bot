@@ -6,28 +6,54 @@ import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class SetConfig extends Command {
+
+    private Map<String, String> regexRoleMap = Map.of(
+            "DM", "(?i)^D(ungeon)?M(aster)?$",
+            "Player", "(?i)^P(layers)?$"
+            );
+    private Map<String, String> regexChannelMap = Map.of(
+            "DMChannel", "(?i)^D(ungeon)?M(aster)?Ch(annel)?$",
+            "CalendarChannel", "(?i)^C(alend[ea]r)?Ch(annel)?$",
+            "FoodChannel", "(?i)^F(ood)?Ch(annel)?$",
+            "MemeChannel", "(?i)^M(eme)?Ch(annel)?$"
+    );
+    private String allconfigs;
 
     public SetConfig(){
         this.name = "setconfig";
         this.aliases = new String[]{"SC", "set", "config"};
         this.category = "Other";
+        allconfigs = String.join(" ", Stream.concat(regexChannelMap.keySet().stream(), regexRoleMap.keySet().stream()).collect(Collectors.toList()));
     }
     @Override
     public void run(String[] args, GuildMessageReceivedEvent e) {
         if (args.length == 2){
+            boolean valid = false;
             Message m = e.getMessage();
-            if (args[0].matches("(?i)^D(ungeon)?M(aster)?$")){
-                setRole(m, "DM");
-            } else if (args[0].matches("(?i)^P(layers)?$")){
-                setRole(m, "Player");
-            } else if (args[0].matches("(?i)^D(ungeon)?M(aster)?Ch(annel)?$")){
-                setChannel(m, "DMChannel");
-            } else if (args[0].matches("(?i)^C(alend[ea]r)?Ch(annel)?$")){
-                setChannel(m, "CalendarChannel");
-            } else if (args[0].matches("(?i)^F(ood)?Ch(annel)?$")){
-                setChannel(m, "FoodChannel");
+            for (String key : regexRoleMap.keySet()){
+                if (!valid && args[0].matches(regexRoleMap.get(key))){
+                    setRole(m, key);
+                    valid = true;
+                }
             }
+            for (String key : regexChannelMap.keySet()){
+                if (!valid && args[0].matches(regexChannelMap.get(key))){
+                    setChannel(m, key);
+                    valid = true;
+                }
+            }
+            if (!valid){
+                e.getChannel().sendMessage("No setting named " + args[0] + "\nPossible settings:" + allconfigs).queue();
+            }
+        } else {
+            e.getChannel().sendMessage("Possible settings: " + allconfigs).queue();
         }
     }
 

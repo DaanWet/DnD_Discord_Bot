@@ -30,6 +30,6 @@ public class ConfigHandler extends DataHandler{
     }
 
     public String getChannel(String key){
-        return (String) config.getOrDefault(key, g.getDefaultChannel().getId());
+        return (String) config.getOrDefault(key, g.getDefaultChannel().getIdLong());
     }
 }

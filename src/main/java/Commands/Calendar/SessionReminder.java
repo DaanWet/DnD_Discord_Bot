@@ -23,12 +23,24 @@ public class SessionReminder {
 
     private static DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static Map<LocalDateTime, ScheduledFuture> map = new HashMap<>();
+    private static Map<LocalDateTime, ScheduledFuture> mememap = new HashMap<>();
     private static Random random = new Random();
 
     public static void makeMessage(LocalDateTime date, Guild g){
+        //Calculate Time to meme message
+        LocalDateTime mDate = date.minusHours(24);
+        Long mdiff = ChronoUnit.MILLIS.between(LocalDateTime.now(), mDate);
+
+        //Send Scheduled message and add to map
+        TextChannel mch = g.getTextChannelById(new ConfigHandler(g).getChannel("MemeChannel"));
+        ScheduledFuture<?> mtask = mch.sendMessage("`24h Left to post your meme to make a chance to get a special reward!`").queueAfter(mdiff > 0 ? mdiff : 0, TimeUnit.MILLISECONDS);
+        mememap.put(date, mtask);
+
+        //Calculate time to messageDate
         LocalDateTime messageDate = date.minusHours(6);
         long diff = ChronoUnit.MILLIS.between(LocalDateTime.now(), messageDate);
-        TextChannel ch = g.getTextChannelById(new ConfigHandler(g).getChannel("CalendarChannel"));
+
+        //Create message
         NPCMessageHandler npch = new NPCMessageHandler(g);
         ArrayList<Map<String, String>> messages = npch.getSpecificMessages();
         if (messages.size() == 0) {
@@ -39,12 +51,17 @@ public class SessionReminder {
         String name = i != -1 ? messages.get(i).get("npc") : "";
         String custommessage = i != -1 ? messages.get(i).get("message") : "It's time to go on an adventure!";
         eb.addField(custommessage, "Don't forget our session tomorrow!", false);
+
+        //Set picture depending on sender
         CharacterHandler chh = new CharacterHandler(g);
         if (!name.equals("") && !chh.getPicture(name, "name").equals("")){
             eb.setAuthor(name, chh.getPicture(name, "name"), chh.getPicture(name, "name"));
         } else {
             eb.setAuthor(!name.equals("") ? name : g.getSelfMember().getEffectiveName());
         }
+
+        //Send Scheduled Message and add to map
+        TextChannel ch = g.getTextChannelById(new ConfigHandler(g).getChannel("CalendarChannel"));
         ScheduledFuture<?> task = ch.sendMessage(eb.build()).queueAfter(diff > 0 ? diff : 0, TimeUnit.MILLISECONDS, message -> {
             LunchMessager.makeMessage(date, g);
             npch.clearSpecific();
@@ -56,6 +73,8 @@ public class SessionReminder {
         if (map.keySet().contains(date)) {
             map.get(date).cancel(false);
             map.remove(date);
+            mememap.get(date).cancel(false);
+            mememap.remove(date);
         }
     }
 

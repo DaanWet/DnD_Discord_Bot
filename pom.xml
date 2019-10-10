@@ -17,14 +17,35 @@
                     <target>9</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <configuration>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <transformers>
+                        <transformer implementation=
+                                             "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <mainClass>Main</mainClass>
+                        </transformer>
+                    </transformers>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
     <dependencies>
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>3.8.3_463</version>
+            <version>3.8.3_464</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>

@@ -9,7 +9,6 @@ import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -22,14 +21,24 @@ public class DataHandler {
     protected String guild;
     protected Guild g;
     protected JSONObject guildObject;
+    final private String PATH = "./src/main/resources/Data.json";
+    final private Map<String, JSONArray> arrayData = Map.of(
+            "food", new JSONArray(),
+            "dates", new JSONArray()
+    );
+    final private Map<String, JSONObject> objectData = Map.of(
+            "messages", new JSONObject()
+    );
 
     DataHandler(Guild g) {
+        String s = null;
         JSONParser parser = new JSONParser();
         guild = g.getId();
         this.g = g;
-        try (FileReader reader = new FileReader("src/main/resources/Data.json")) {
+        try (FileReader reader = new FileReader(PATH)) {
             jsonObject = ((JSONObject) parser.parse(reader));
             if (!jsonObject.containsKey(g.getId())) {
+                JSONArray f = (JSONArray) arrayData.get("food").clone();
                 JSONArray food = new JSONArray();
                 JSONArray dates = new JSONArray();
                 JSONArray characters = new JSONArray();
@@ -51,7 +60,7 @@ public class DataHandler {
     }
 
     void save() {
-        try (FileWriter file = new FileWriter("src/main/resources/Data.json")) {
+        try (FileWriter file = new FileWriter(PATH)) {
             file.write(jsonObject.toJSONString());
             file.flush();
         } catch (IOException e) {

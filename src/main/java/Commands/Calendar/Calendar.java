@@ -2,7 +2,9 @@ package Commands.Calendar;
 
 import Commands.Command;
 import DataHandlers.CalendarHandler;
+import DataHandlers.ConfigHandler;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
 import java.awt.*;
@@ -22,7 +24,8 @@ public class Calendar extends Command {
 
     @Override
     public void run(String[] args, GuildMessageReceivedEvent e) {
-        CalendarHandler calendarHandler = new CalendarHandler(e.getGuild());
+        Guild g = e.getGuild();
+        CalendarHandler calendarHandler = new CalendarHandler(g);
         EmbedBuilder eb = new EmbedBuilder();
         StringBuilder sb = new StringBuilder();
         ArrayList<String> dates = new ArrayList<>();
@@ -36,7 +39,7 @@ public class Calendar extends Command {
             eb.addField("Planned Sessions:", sb.toString(), false);
         }
         eb.setColor(Color.ORANGE);
-        e.getChannel().sendMessage(eb.build()).queue();
+        g.getTextChannelById(new ConfigHandler(g).getChannel("CalendarChannel")).sendMessage(eb.build()).queue();
     }
 
     @Override
