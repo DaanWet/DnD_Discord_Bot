@@ -21,7 +21,7 @@ public class DataHandler {
     protected String guild;
     protected Guild g;
     protected JSONObject guildObject;
-    final private String PATH = "./src/main/resources/Data.json";
+    final private String PATH = "./Data.json";
     final private Map<String, JSONArray> arrayData = Map.of(
             "food", new JSONArray(),
             "dates", new JSONArray()

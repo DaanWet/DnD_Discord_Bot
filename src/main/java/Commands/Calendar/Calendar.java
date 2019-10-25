@@ -39,7 +39,7 @@ public class Calendar extends Command {
             eb.addField("Planned Sessions:", sb.toString(), false);
         }
         eb.setColor(Color.ORANGE);
-        g.getTextChannelById(new ConfigHandler(g).getChannel("CalendarChannel")).sendMessage(eb.build()).queue();
+        e.getChannel().sendMessage(eb.build()).queue();
     }
 
     @Override

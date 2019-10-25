@@ -26,7 +26,7 @@ public class SessionReminder {
     private static Map<LocalDateTime, ScheduledFuture> mememap = new HashMap<>();
     private static Random random = new Random();
 
-    public static void makeMessage(LocalDateTime date, Guild g){
+    public static void makeMemeMessage(LocalDateTime date, Guild g){
         //Calculate Time to meme message
         LocalDateTime mDate = date.minusHours(24);
         Long mdiff = ChronoUnit.MILLIS.between(LocalDateTime.now(), mDate);
@@ -35,7 +35,10 @@ public class SessionReminder {
         TextChannel mch = g.getTextChannelById(new ConfigHandler(g).getChannel("MemeChannel"));
         ScheduledFuture<?> mtask = mch.sendMessage("`24h Left to post your meme to make a chance to get a special reward!`").queueAfter(mdiff > 0 ? mdiff : 0, TimeUnit.MILLISECONDS);
         mememap.put(date, mtask);
+    }
 
+
+    public static void makeMessage(LocalDateTime date, Guild g){
         //Calculate time to messageDate
         LocalDateTime messageDate = date.minusHours(6);
         long diff = ChronoUnit.MILLIS.between(LocalDateTime.now(), messageDate);
@@ -82,7 +85,8 @@ public class SessionReminder {
         CalendarHandler calendarHandler = new CalendarHandler(g);
         ArrayList<LocalDateTime> sessions = calendarHandler.getSessions(false);
         sessions.forEach(session -> {
-            LocalDateTime messageDate = session.minusHours(6);
+            LocalDateTime memeDate = session.minusHours(24);
+            LocalDateTime messageDate = session.minusHours(4);
             long diff = ChronoUnit.MILLIS.between(LocalDateTime.now(), messageDate);
             long difffood = ChronoUnit.MILLIS.between(LocalDateTime.now(), session);
             if (diff > 0) {
